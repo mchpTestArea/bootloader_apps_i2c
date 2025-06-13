@@ -1,0 +1,52 @@
+# I2C Fail Safe Bootloader
+
+This example application shows how to use the Bootloader Library to bootload an application on device having dual flash bank feature using I2C protocol
+
+**Bootloader Application**
+
+-   This is a fail safe bootloader application which resides from starting location of both the banks of device flash memory region for SAM devices with dual bank support
+
+-   It uses I2C peripheral library in non-interrupt mode
+
+-   Trigger Methods
+
+    -   It uses the On board Switch as bootloader trigger pin to force enter the bootloader at reset of device
+
+    -   It checks for bootloader request pattern **\(0x5048434D\)** from the starting 16 Bytes of RAM to force enter bootloader at reset of device
+
+
+**NVM Host Application**
+
+-   This is a embedded I2C host application which sends the application image stored in it's internal flash \(NVM\) to the inactive bank of the target board over the I2C bus
+
+-   The user application binary must be converted to a header file containing the application image in HEX format in a C style array. A [btl\_bin\_to\_c\_array.py](../../docs/GUID-9CAF1352-B47D-4AD7-B254-E4195891E669.md) utility is provided to do this conversion
+
+    ![i2c_bootloader_host_nvm](../../docs/GUID-BA2EE978-3646-4499-972A-733FBDB3ABAC-low.png)
+
+-   To program the bootloader to the inactive flash bank, the user application binary may be combined with the bootloader using the [btl\_app\_merge\_bin.py](../../docs/GUID-8C883C24-B893-4C90-853F-AB4DBB602E47.md) utility. The combined binary file must be converted to a header file using the [btl\_bin\_to\_c\_array.py](../../docs/GUID-9CAF1352-B47D-4AD7-B254-E4195891E669.md) utility
+
+    ![i2c_bootloader_host_nvm_btl_app_merge](../../docs/GUID-F6B54D7D-011E-4EA3-81AF-A5E4300FFF7E-low.png)
+
+-   Add the generated image header file of the application or bootloader and application combined to the NVM host application project. Rebuild and program the NVM host application. This results in the application image being copied in the host MCU's flash \(NVM\)
+
+
+**Test Application**
+
+-   This is a test application which resides from end of bootloader size in device flash memory
+
+-   It will be loaded into flash memory by bootloader application
+
+-   It blinks an LED and provides console output
+
+-   It uses the On board Switch to trigger the bootloader from firmware
+
+    -   Once the switch is pressed it loads first 16 bytes of RAM with bootloader request pattern **\(0x5048434D\)** and resets the device
+
+
+**Development Kits**<br />The following table provides links to documentation on how to build and run I2C Fail Safe bootloader on different development kits
+
+-   **[SAM E54 Xplained Pro Evaluation Kit: Building and Running the I2C Fail Safe Bootloader applications](../../docs/GUID-68986B47-88CF-4085-9C9B-C1E66779C083.md)**  
+
+
+**Parent topic:**[MPLAB® Harmony 3 I2C Bootloader Application Examples](../../docs/GUID-85B9ED1C-4EF8-4639-8758-17D68906C3F9.md)
+
